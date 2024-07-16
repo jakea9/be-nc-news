@@ -20,11 +20,11 @@ describe('/api/topics', () => {
 
     describe('Get /api/topics', () => {
 
-        test('', () => {
+        test('Returns correct status code when a response is sent with the appropriate array (containing objects with the right properties).', () => {
 
             return request(app).get('/api/topics').expect(200).then(res => {
                 
-                expect(Array.isArray(res.body)).toBe(true)
+                expect(Array.isArray(res.body)).toBe(true) // Overshadowed by the future part of the tests
 
                 expect(res.body.length).toBeGreaterThan(0)
 
@@ -34,6 +34,20 @@ describe('/api/topics', () => {
                 })
 
             })
+
+        })
+
+    })
+
+})
+
+describe('Returns 404 status if a bad route is asked for', () => {
+
+    test('The test for what is said in describe', () => {
+
+        return request(app).get('/api/not-an-endpoint').expect(404).then(res => {
+        
+            expect (res.body.message).toBe('Path not found.')
 
         })
 

@@ -6,6 +6,10 @@ function getTopics(req, res, next) {
 
         res.status(200).json(topics)
 
+    }).catch((err) => {
+
+        next(err)
+        
     })
 
 }
