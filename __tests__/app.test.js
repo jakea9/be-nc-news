@@ -3,6 +3,7 @@ const app = require('../app')
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data/index')
 const db = require('../db/connection')
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => {
 
@@ -50,6 +51,23 @@ describe('Returns 404 status if a bad route is asked for', () => {
             expect (res.body.message).toBe('Path not found.')
 
         })
+
+    })
+
+})
+
+describe('Get /api', () => {
+
+    test('Responds with a json detailing all available endpoints.', () => {
+
+        return request(app)
+            .get('/api')
+            .expect(200)
+            .then(({ body }) => {
+
+                expect(body.endpoints).toEqual(endpoints)
+
+            })
 
     })
 
