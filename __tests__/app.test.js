@@ -121,4 +121,56 @@ describe('/api/articles', () => {
 
     })
 
+    describe('Get /api/articles', () => {
+
+        test('Status 200 and responsds with all articles in the case where the endpoint is correct.', () => {
+
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then((res) => {
+
+                    expect(res.body.length).toBeGreaterThan(0)
+
+                    res.body.forEach(article => {
+
+                        
+
+                        expect(article).toHaveProperty('author')
+                        expect(article).toHaveProperty('title')
+                        expect(article).toHaveProperty('article_id')
+                        expect(article).toHaveProperty('topic')
+                        expect(article).toHaveProperty('created_at')
+                        expect(article).toHaveProperty('votes')
+                        expect(article).toHaveProperty('article_img_url')
+                        expect(article).toHaveProperty('comment_count')
+
+                        expect(article).not.toHaveProperty('body')
+
+                    })
+
+
+                })
+
+
+        })
+
+        test('Articles should be sorted by data, starting with the most recent.', () => {
+
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(result => {
+                    console.log(result.body)
+                    expect(result.body).toBeSortedBy('created_at', {
+                        descending: true
+                    })
+
+                })
+
+
+        })
+
+    })
+
 })
