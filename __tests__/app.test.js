@@ -97,6 +97,28 @@ describe('/api/articles', () => {
 
         })
 
+        test('If given an article_id that does not exist, 404 status is returned.', () => {
+
+            return request(app)
+                .get('/api/articles/2000000')
+                .expect(404)
+                .then((res) => {
+                    expect(res.body.message).toEqual("Article not found.");
+                 })
+
+        })
+
+        test('If given an article_id in the wrong format, 400 status is returned.', () => {
+
+            return request(app)
+                .get('/api/articles/something')
+                .expect(400)
+                .then((res) => {
+                    expect(res.body.message).toEqual('Invalid input.')
+                })
+
+        })
+
     })
 
 })
