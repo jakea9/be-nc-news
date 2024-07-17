@@ -72,3 +72,53 @@ describe('Get /api', () => {
     })
 
 })
+
+describe('/api/articles', () => {
+
+    describe('Get /api/articles/:article_id', () => {
+
+        test('Returns an article by its id and has the correct properties', () => {
+
+            return request(app)
+                .get('/api/articles/3')
+                .expect(200)
+                .then(({ body }) => {
+
+                    expect(body).toHaveProperty('author')
+                    expect(body).toHaveProperty('title')
+                    expect(body).toHaveProperty('article_id')
+                    expect(body).toHaveProperty('body')
+                    expect(body).toHaveProperty('topic')
+                    expect(body).toHaveProperty('created_at')
+                    expect(body).toHaveProperty('votes')
+                    expect(body).toHaveProperty('article_img_url')
+
+                }) 
+
+        })
+
+        test('If given an article_id that does not exist, 404 status is returned.', () => {
+
+            return request(app)
+                .get('/api/articles/2000000')
+                .expect(404)
+                .then((res) => {
+                    expect(res.body.message).toEqual("Article not found.");
+                 })
+
+        })
+
+        test('If given an article_id in the wrong format, 400 status is returned.', () => {
+
+            return request(app)
+                .get('/api/articles/something')
+                .expect(400)
+                .then((res) => {
+                    expect(res.body.message).toEqual('Invalid input.')
+                })
+
+        })
+
+    })
+
+})
