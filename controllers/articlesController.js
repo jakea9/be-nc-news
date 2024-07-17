@@ -1,4 +1,4 @@
-const getArticleFromDB = require('../models/articlesModels')
+const { getArticleFromDB, getAllArticlesFromDB } = require('../models/articlesModels')
 
 function getParticularArticle(req, res, next) {
 
@@ -16,4 +16,18 @@ function getParticularArticle(req, res, next) {
 
 }
 
-module.exports = getParticularArticle
+function getAllArticles(req, res, next) {
+
+    getAllArticlesFromDB().then((articles) => {
+
+        res.status(200).json(articles)
+
+    }).catch((err) => {
+
+        next(err)
+        
+    })
+
+}
+
+module.exports = { getParticularArticle, getAllArticles }
