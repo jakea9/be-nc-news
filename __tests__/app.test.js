@@ -161,13 +161,98 @@ describe('/api/articles', () => {
                 .get('/api/articles')
                 .expect(200)
                 .then(result => {
-                    console.log(result.body)
                     expect(result.body).toBeSortedBy('created_at', {
                         descending: true
                     })
 
                 })
 
+
+        })
+
+    })
+
+    describe('/api/articles/:article_id/comments', () => {
+
+        test('Get all comments for an article with each one having the expected properties', () => {
+
+            return request(app)
+                .get('/api/articles/3/comments')
+                .expect(200)
+                .then((res) => 
+                
+                    expect(res.body).toEqual([ {
+                        body: "Ambidextrous marsupial",
+                        votes: 0,
+                        author: "icellusedkars",
+                        article_id: 3,
+                        created_at: "2020-09-19T23:10:00.000Z",
+                        comment_id: 11,
+                      }, {
+                        body: "git push origin master",
+                        votes: 0,
+                        author: "icellusedkars",
+                        article_id: 3,
+                        created_at: "2020-06-20T07:24:00.000Z",
+                        comment_id: 10,
+                      }])
+                
+                )
+
+        })
+
+        test('Returns comments with in order of most recent', () => {
+
+            return request(app)
+                .get('/api/articles/3/comments')
+                .expect(200)
+                .then((res) => {
+
+                    expect(res.body).toBeSortedBy('created_at', {
+                        descending: true
+                    })
+
+                })
+
+        })
+
+        test('Get an empty array if the article has no comments', () => {
+
+            return request(app)
+                .get('/api/articles/2/comments')
+                .expect(200)
+                .then((res) => 
+                
+                    expect(res.body).toEqual([])
+                
+                )
+
+        })
+
+
+        test('If an article is in the endpoint that does not exist, a message says Article not found.', () => {
+
+            return request(app)
+                .get('/api/articles/2000000/comments')
+                .expect(404)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Article not found.')
+
+                })
+
+        })
+
+        test('Responds with a message invalid input if the wrong datatype is passed', () => {
+
+            return request(app)
+                .get('/api/articles/datatype/comments')
+                .expect(400)
+                .then((res) => 
+                
+                    expect(res.body.message).toBe('Invalid input.')
+                
+                )
 
         })
 
