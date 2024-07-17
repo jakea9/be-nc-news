@@ -1,4 +1,4 @@
-const { getArticleFromDB, getAllArticlesFromDB } = require('../models/articlesModels')
+const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB } = require('../models/articlesModels')
 
 function getParticularArticle(req, res, next) {
 
@@ -30,4 +30,18 @@ function getAllArticles(req, res, next) {
 
 }
 
-module.exports = { getParticularArticle, getAllArticles }
+function getAllCommentsForAnArticle(req, res, next) {
+
+    const { article_id } = req.params
+
+    getAllCommmentsForAnArticleFromDB(article_id).then((arrayOfComments) => {
+
+        res.status(200).json(arrayOfComments)
+
+    }).catch((err) => {
+        next(err)
+    })
+
+}
+
+module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle }
