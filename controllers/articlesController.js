@@ -1,10 +1,11 @@
-const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB } = require('../models/articlesModels')
+const { commentData } = require('../db/data/test-data')
+const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB} = require('../models/articlesModels')
 
 function getParticularArticle(req, res, next) {
 
     const { article_id } = req.params
 
-    getArticleFromDB(article_id).then((article) => {
+    return getArticleFromDB(article_id).then((article) => {
 
         res.status(200).send(article)
 
@@ -18,7 +19,7 @@ function getParticularArticle(req, res, next) {
 
 function getAllArticles(req, res, next) {
 
-    getAllArticlesFromDB().then((articles) => {
+    return getAllArticlesFromDB().then((articles) => {
 
         res.status(200).json(articles)
 
@@ -34,7 +35,7 @@ function getAllCommentsForAnArticle(req, res, next) {
 
     const { article_id } = req.params
 
-    getAllCommmentsForAnArticleFromDB(article_id).then((arrayOfComments) => {
+    return getAllCommmentsForAnArticleFromDB(article_id).then((arrayOfComments) => {
 
         res.status(200).json(arrayOfComments)
 
@@ -44,4 +45,23 @@ function getAllCommentsForAnArticle(req, res, next) {
 
 }
 
-module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle }
+function postComment(req, res, next) {
+
+    const {article_id} = req.params
+    const { username, body }  = req.body
+
+    return getArticleFromDB(article_id).then(() => {
+
+        return postACommentToDB(article_id, username, body)
+
+        }).then((commentAdded) => {
+
+            res.status(201).send({commentAdded : commentAdded})
+
+        }).catch(next)
+
+
+
+}
+
+module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment }
