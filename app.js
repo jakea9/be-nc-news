@@ -1,6 +1,6 @@
 const express = require('express')
 const getTopics = require('./controllers/topicController.js')
-const { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment } = require('./controllers/articlesController.js')
+const { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment, updateArticleVotes } = require('./controllers/articlesController.js')
 const endpoints = require('./endpoints.json')
 
 const app = express()
@@ -22,6 +22,8 @@ app.get('/api/articles/:article_id/comments', getAllCommentsForAnArticle)
 
 app.post('/api/articles/:article_id/comments', postComment)
 
+app.patch('/api/articles/:article_id', updateArticleVotes)
+
 app.all('*', (req, res) => {
 
     res.status(404).send({ message: 'Path not found.' });
@@ -39,6 +41,10 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
 
   if (err.code === '22P02') {
+    res.status(400).send({message: 'Invalid input.'})
+  }
+
+  if (err.code === '23502') {
     res.status(400).send({message: 'Invalid input.'})
   }
 

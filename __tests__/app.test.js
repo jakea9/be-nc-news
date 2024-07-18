@@ -306,4 +306,105 @@ describe('/api/articles', () => {
 
     })
 
+    describe('PATCH /api/articles/:article_id', () => {
+
+        test('Updates the articles votes property', () => {
+
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ inc_votes : 1})
+                .expect(200)
+                .then((res) => {
+
+                    expect(res.body).toEqual({
+                        article_id: 1,
+                        title: "Living in the shadow of a great man",
+                        topic: "mitch",
+                        author: "butter_bridge",
+                        body: "I find this existence challenging",
+                        created_at: '2020-07-09T20:11:00.000Z',
+                        votes: 101,
+                        article_img_url:
+                          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                      })
+
+                })
+        })
+
+        test('If the article does not exist, then we get 404', () => {
+
+            return request(app)
+                .patch('/api/articles/2000000')
+                .send({ inc_votes : 1 })
+                .expect(404)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Article not found.')
+
+                })
+        
+        })
+
+        test('If a wrong datatype is used for the article, then we get 400', () => {
+
+            return request(app)
+                .patch('/api/articles/wrongdatatype')
+                .send({ inc_votes : 1 })
+                .expect(400)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Invalid input.')
+
+                })
+
+
+        })
+
+        test('If a wrong datatype is used for the request, then we get 400', () => {
+
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ inc_votes : 'wrongdatatype' })
+                .expect(400)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Invalid input.')
+
+                })
+
+
+        })
+
+        test('If a no data is used for the request, then we get 400', () => {
+
+            return request(app)
+                .patch('/api/articles/1')
+                .send({})
+                .expect(400)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Invalid input.')
+
+                })
+
+
+        })
+
+        test('If a wrong property is used for the request, then we get 400', () => {
+
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ votes : 20000000000000000000000000000000000000000000000000000000000000000000000000000000000000})
+                .expect(400)
+                .then(res => {
+
+                    expect(res.body.message).toBe('Invalid input.')
+
+                })
+
+
+        })
+
+    })
+
 })

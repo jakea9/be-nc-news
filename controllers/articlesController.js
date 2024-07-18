@@ -1,5 +1,5 @@
 const { commentData } = require('../db/data/test-data')
-const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB} = require('../models/articlesModels')
+const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB, updateArticleVotesInDB} = require('../models/articlesModels')
 
 function getParticularArticle(req, res, next) {
 
@@ -60,8 +60,23 @@ function postComment(req, res, next) {
 
         }).catch(next)
 
+}
 
+function updateArticleVotes(req, res, next) {
+
+    const {article_id} = req.params
+    const { inc_votes }  = req.body
+
+    return getArticleFromDB(article_id).then(() => {
+
+        return updateArticleVotesInDB(article_id, inc_votes)
+
+        }).then((article) => {
+
+            res.status(200).send(article)
+
+        }).catch(err => next(err))
 
 }
 
-module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment }
+module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment, updateArticleVotes }
