@@ -258,4 +258,52 @@ describe('/api/articles', () => {
 
     })
 
+    describe('POST /api/articles/:article_id/comments', () => {
+
+        test('A comment is added to the appropriate article', () => {
+
+            return request(app)
+                .post('/api/articles/2/comments')
+                .send({ username: 'lurker' , body: 'Comment'})
+                .expect(201)
+                .then((res) => {
+
+                    expect(res.body).toEqual({ commentAdded : 'Comment' })
+
+                })
+
+
+        })
+
+        test('Respond with status of 400 if an invalid data type is used for the id', () => {
+
+            return request(app)
+                .post('/api/articles/wrongdatatype/comments')
+                .expect(400)
+                .then((res) => {
+
+                    expect(res.body.message).toBe('Invalid input.')
+
+                })
+
+
+        })
+
+        test('Respond with status of 404 if a valid data type is used for the id, but it does not exist.', () => {
+
+            return request(app)
+                .post('/api/articles/20000000/comments')
+                .expect(404)
+                .then((res) => {
+
+                    expect(res.body.message).toBe('Article not found.')
+
+                })
+
+
+        })
+
+
+    })
+
 })
