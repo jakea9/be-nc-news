@@ -407,4 +407,38 @@ describe('/api/articles', () => {
 
     })
 
+    describe('DELETE /api/comments/:comments_id', () => {
+
+        test('Deletes the comments and responds with 204', () => {
+
+            return request(app)
+                .delete('/api/comments/1')
+                .expect(204)
+
+        })
+
+        test('For a comments_id that does not exist, 404 error is returned.', () => {
+
+            return request(app)
+                .delete('/api/comments/20000000')
+                .expect(404)
+                .then(res => {
+                    expect(res.body.message).toBe('Article not found.')
+                })
+
+        })
+
+        test('For a comments_id that is of the wrong datatype, 400 error is returned.', () => {
+
+            return request(app)
+                .delete('/api/comments/comment')
+                .expect(400)
+                .then(res => {
+                    expect(res.body.message).toBe('Invalid input.')
+                })
+
+        })
+
+    })
+
 })
