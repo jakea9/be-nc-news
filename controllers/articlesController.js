@@ -1,5 +1,5 @@
 const { commentData } = require('../db/data/test-data')
-const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB, updateArticleVotesInDB, deleteSpecificComment} = require('../models/articlesModels')
+const { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB, updateArticleVotesInDB, deleteSpecificComment, getUsersFromDB} = require('../models/articlesModels')
 
 function getParticularArticle(req, res, next) {
 
@@ -91,4 +91,15 @@ function deleteComment(req, res, next) {
              }).catch(err => next(err))
 }
 
-module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment, updateArticleVotes, deleteComment }
+function getUsers(req, res, next) {
+
+    return getUsersFromDB()
+        .then((output) => {
+            res.status(200).json(output)
+        })
+        .catch((err => next(err)))
+
+}
+
+
+module.exports = { getParticularArticle, getAllArticles, getAllCommentsForAnArticle, postComment, updateArticleVotes, deleteComment, getUsers}

@@ -442,3 +442,27 @@ describe('/api/articles', () => {
     })
 
 })
+
+describe('/api/users', () => {
+
+    test('GET /api/users', () => {
+
+        return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(result => {
+
+                result.body.forEach(proeprty => {
+
+                    expect(proeprty).toHaveProperty('username')
+                    expect(proeprty).toHaveProperty('name')
+                    expect(proeprty).toHaveProperty('avatar_url')
+
+                })
+
+
+            })
+
+    })
+
+})

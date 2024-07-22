@@ -78,4 +78,15 @@ function deleteSpecificComment(comment_id) {
 
 }
 
-module.exports = { getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB, updateArticleVotesInDB, deleteSpecificComment}
+function getUsersFromDB() {
+
+    return db.query('SELECT username, name, avatar_URL FROM users')
+        .then(result => {
+
+            return result.rows
+
+        })
+
+}
+
+module.exports ={ getArticleFromDB, getAllArticlesFromDB, getAllCommmentsForAnArticleFromDB, postACommentToDB, updateArticleVotesInDB, deleteSpecificComment, getUsersFromDB}
